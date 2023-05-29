@@ -1,6 +1,7 @@
 class NaveEspacial {
 	var velocidad = 0
 	var direccion = 0
+	var combustible = 0
 	
 	method acelerar(cuanto) {
 		velocidad = (velocidad + cuanto).min(100000)
@@ -15,6 +16,13 @@ class NaveEspacial {
 	method acercarseUnPocoAlSol(){	direccion = (direccion + 1).min(10)	}
 	method alejarseUnPocoDelSol(){	direccion = (direccion - 1).max(-10)	}
 	
+	method cargarCombustible(cuanto){ combustible = (combustible+cuanto).max(0)}
+	method descargarCombustible(cuanto){ combustible = (combustible-cuanto).max(0)}
+	
+	method prepararViaje(){
+		self.cargarCombustible(30000)
+		self.acelerar(5000)	
+	}
 }
 
 class NaveBaliza inherits NaveEspacial{
@@ -22,9 +30,10 @@ class NaveBaliza inherits NaveEspacial{
 	
 	method cambiarColorDeBaliza(colorNuevo){ colorAMostrar = colorNuevo}
 	
-	method prepararViaje(){
+	override method prepararViaje(){
 		self.cambiarColorDeBaliza("verde")
 		self.ponerseParaleloAlSol()
+		super()
 	}
 }
 
@@ -38,10 +47,11 @@ class NavePasajeros inherits NaveEspacial{
 	method	cargarBebida(cuanto){ racionesBebida =+ cuanto}
 	method	descargarBebida(cuanto){ racionesBebida =- cuanto}
 	
-	method prepararViaje(){
+	override method prepararViaje(){
 		self.cargarComida(cantPasajeros*4)
 		self.cargarBebida(cantPasajeros*6)
 		self.acercarseUnPocoAlSol()
+		super()
 	}
 }
 
@@ -61,15 +71,21 @@ class NaveCombate inherits NaveEspacial{
 	method primerMensaje(){ return mensajesEmitidos.first( {	m => m.toString() } ) } //REVISAR
 	method ultimoMensaje(){ return mensajesEmitidos.last( {	m => m.toString() } ) }		//REVISAR
 	method mensajesEmitidos(){ return mensajesEmitidos.map() }							//REVISAR
-	method emitirMensaje(mensaje){	mensaje.printString()	}							//REVISAR
+	method agregarMensaje(mensaje){ mensajesEmitidos.add(mensaje)}						//REVISAR
+	method emitirMensaje(mensaje){														//REVISAR	
+		mensaje.printString()
+		self.agregarMensaje(mensaje)
+	}
 	method esEscueta() = false															//REVISAR
 	
-	method prepararViaje(){
+	override method prepararViaje(){
 		self.ponerseVisible()
 		self.replegarMisiles()
 		self.acelerar(15000)
 		self.emitirMensaje("Saliendo en misión")
-		
+		self.cargarCombustible(30000)
+		self.acelerar(5000)
+		self.acelerar(15000)
 	}
 	
 }
