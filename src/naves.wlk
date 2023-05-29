@@ -71,15 +71,11 @@ class NaveCombate inherits NaveEspacial{
 	method replegarMisiles() { misilesDesplegados = false }
 	method misilesDesplegados() = misilesDesplegados
 	
-	method primerMensaje(){ return mensajesEmitidos.first( {	m => m.toString() } ) } //REVISAR
-	method ultimoMensaje(){ return mensajesEmitidos.last( {	m => m.toString() } ) }		//REVISAR
-	method mensajesEmitidos(){ return mensajesEmitidos.map() }							//REVISAR
-	method agregarMensaje(mensaje){ mensajesEmitidos.add(mensaje)}						//REVISAR
-	method emitirMensaje(mensaje){														//REVISAR	
-		mensaje.printString()
-		self.agregarMensaje(mensaje)
-	}
-	method esEscueta() = false															//REVISAR
+	method primerMensaje(){ return mensajesEmitidos.first() }
+	method ultimoMensaje(){ return mensajesEmitidos.last() }		
+	method mensajesEmitidos(){ return mensajesEmitidos.map() }							
+	method emitirMensaje(mensaje){	mensajesEmitidos.add(mensaje)	}
+	method esEscueta(){	mensajesEmitidos.all( {m => m.size() <= 30} )	}
 	
 	override method prepararViaje(){
 		self.ponerseVisible()
