@@ -38,6 +38,11 @@ class NaveBaliza inherits NaveEspacial{
 		super()
 	}
 	override method estaTranquila() = super() and colorAMostrar != "rojo"
+	
+	method recibirAmenaza(){
+		self.irHaciaElSol()
+		self.cambiarColorDeBaliza("rojo")
+	}
 }
 
 class NavePasajeros inherits NaveEspacial{
@@ -55,6 +60,12 @@ class NavePasajeros inherits NaveEspacial{
 		self.cargarBebida(cantPasajeros*6)
 		self.acercarseUnPocoAlSol()
 		super()
+	}
+	
+	method recibirAmenaza(){
+		self.acelerar(velocidad*2)
+		self.descargarBebida(cantPasajeros*2)
+		self.descargarComida(cantPasajeros)
 	}
 }
 
@@ -89,16 +100,34 @@ class NaveCombate inherits NaveEspacial{
 	
 	override method estaTranquila() = super() and !misilesDesplegados
 	
+	method recibirAmenaza(){
+		self.acercarseUnPocoAlSol()
+		self.acercarseUnPocoAlSol()
+		self.emitirMensaje("Amenaza recibida")
+	}
 }
 
 class NaveHosiptal inherits NavePasajeros {
 	var quirofanosPreparados = true
 	
-	override method estaTranquila() = super() and !quirofanosPreparados	
+	method prepararQuirofanos() {	quirofanosPreparados = true	}
+	method usarQuirofanos() {	quirofanosPreparados = false}
+	
+	override method estaTranquila() = super() and !quirofanosPreparados
+	override method recibirAmenaza(){
+		super()
+		self.prepararQuirofanos()
+	}
 }
 
 class NaveCombateSigilosa inherits NaveCombate{
 	
 	override method estaTranquila() = super () and !esInvisible
+	
+	override method recibirAmenaza(){
+		super()
+		self.desplegarMisiles()
+		self.ponerseInvisible()
+	}
 }
 	
