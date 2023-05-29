@@ -22,6 +22,10 @@ class NaveBaliza inherits NaveEspacial{
 	
 	method cambiarColorDeBaliza(colorNuevo){ colorAMostrar = colorNuevo}
 	
+	method prepararViaje(){
+		self.cambiarColorDeBaliza("verde")
+		self.ponerseParaleloAlSol()
+	}
 }
 
 class NavePasajeros inherits NaveEspacial{
@@ -34,6 +38,11 @@ class NavePasajeros inherits NaveEspacial{
 	method	cargarBebida(cuanto){ racionesBebida =+ cuanto}
 	method	descargarBebida(cuanto){ racionesBebida =- cuanto}
 	
+	method prepararViaje(){
+		self.cargarComida(cantPasajeros*4)
+		self.cargarBebida(cantPasajeros*6)
+		self.acercarseUnPocoAlSol()
+	}
 }
 
 class NaveCombate inherits NaveEspacial{
@@ -55,5 +64,12 @@ class NaveCombate inherits NaveEspacial{
 	method emitirMensaje(mensaje){	mensaje.printString()	}							//REVISAR
 	method esEscueta() = false															//REVISAR
 	
+	method prepararViaje(){
+		self.ponerseVisible()
+		self.replegarMisiles()
+		self.acelerar(15000)
+		self.emitirMensaje("Saliendo en misión")
+		
+	}
 	
 }
