@@ -29,8 +29,12 @@ class NaveEspacial {
 
 class NaveBaliza inherits NaveEspacial{
 	var colorAMostrar = ""
+	var cambioDeBaliza = false
 	
-	method cambiarColorDeBaliza(colorNuevo){ colorAMostrar = colorNuevo}
+	method cambiarColorDeBaliza(colorNuevo){ 
+		colorAMostrar = colorNuevo
+		cambioDeBaliza = true
+	}
 	
 	override method prepararViaje(){
 		self.cambiarColorDeBaliza("verde")
@@ -43,17 +47,30 @@ class NaveBaliza inherits NaveEspacial{
 		self.irHaciaElSol()
 		self.cambiarColorDeBaliza("rojo")
 	}
+	
+	method estaDeRelajo() = !cambioDeBaliza
 }
 
 class NavePasajeros inherits NaveEspacial{
 	var property cantPasajeros
 	var racionesComida
 	var racionesBebida
+	var racionesServidas
 	
 	method	cargarComida(cuanto){ racionesComida =+ cuanto}
 	method	descargarComida(cuanto){ racionesComida =- cuanto}
 	method	cargarBebida(cuanto){ racionesBebida =+ cuanto}
 	method	descargarBebida(cuanto){ racionesBebida =- cuanto}
+	
+	method servirComida(cuantas){ 
+		racionesComida =- cuantas
+		racionesServidas =+ cuantas
+	}
+	
+	method servirBebidas(cuantas){ 
+		racionesBebida =- cuantas
+		racionesServidas =+ cuantas
+	}
 	
 	override method prepararViaje(){
 		self.cargarComida(cantPasajeros*4)
@@ -64,9 +81,11 @@ class NavePasajeros inherits NaveEspacial{
 	
 	method recibirAmenaza(){
 		self.acelerar(velocidad*2)
-		self.descargarBebida(cantPasajeros*2)
-		self.descargarComida(cantPasajeros)
+		self.servirBebidas(cantPasajeros*2)
+		self.servirComida(cantPasajeros)
 	}
+	
+	method estaDeRelajo() = racionesServidas >= 50
 }
 
 class NaveCombate inherits NaveEspacial{
@@ -86,7 +105,7 @@ class NaveCombate inherits NaveEspacial{
 	method ultimoMensaje(){ return mensajesEmitidos.last() }		
 	method mensajesEmitidos(){ return mensajesEmitidos.map() }							
 	method emitirMensaje(mensaje){	mensajesEmitidos.add(mensaje)	}
-	method esEscueta(){	mensajesEmitidos.all( {m => m.size() <= 30} )	}
+	method esEscueta(){	return mensajesEmitidos.all( {m => m.size() <= 30} )	}
 	
 	override method prepararViaje(){
 		self.ponerseVisible()
@@ -105,6 +124,8 @@ class NaveCombate inherits NaveEspacial{
 		self.acercarseUnPocoAlSol()
 		self.emitirMensaje("Amenaza recibida")
 	}
+	
+	method estaDeRelajo() = self.esEscueta()
 }
 
 class NaveHosiptal inherits NavePasajeros {
