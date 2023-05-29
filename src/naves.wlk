@@ -23,6 +23,8 @@ class NaveEspacial {
 		self.cargarCombustible(30000)
 		self.acelerar(5000)	
 	}
+	
+	method estaTranquila() = combustible >= 4000 and velocidad<=12000
 }
 
 class NaveBaliza inherits NaveEspacial{
@@ -35,6 +37,7 @@ class NaveBaliza inherits NaveEspacial{
 		self.ponerseParaleloAlSol()
 		super()
 	}
+	override method estaTranquila() = super() and colorAMostrar != "rojo"
 }
 
 class NavePasajeros inherits NaveEspacial{
@@ -88,4 +91,18 @@ class NaveCombate inherits NaveEspacial{
 		self.acelerar(15000)
 	}
 	
+	override method estaTranquila() = super() and !misilesDesplegados
+	
 }
+
+class NaveHosiptal inherits NavePasajeros {
+	var quirofanosPreparados = true
+	
+	override method estaTranquila() = super() and !quirofanosPreparados	
+}
+
+class NaveCombateSigilosa inherits NaveCombate{
+	
+	override method estaTranquila() = super () and !esInvisible
+}
+	
